@@ -74,10 +74,9 @@ export const Graf = () => {
 
     }, [dispatch, points]);
 
-    const handleClick = (e) => {
-        var x = e.clientX, y = e.clientY; 
+    const handleClick = (e) => { 
+        const { x: x, y: y } = transformCoords(e.nativeEvent.offsetX, e.nativeEvent.offsetY, canvasRef.current.getContext('2d').canvas.width / 2 ,1);
         console.log("x: " + x + " y: " + y);
-        
     }
 
     return (

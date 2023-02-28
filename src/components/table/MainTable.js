@@ -1,15 +1,15 @@
-import React, {useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, {useEffect, useRef }    from "react";
+import { useSelector, useDispatch }   from "react-redux";
 import { selectAllPoints, getPoints } from "../../api/apiSlice";
 
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import { styled }     from '@mui/material/styles';
+import Table          from '@mui/material/Table';
+import TableBody      from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import TableHead      from '@mui/material/TableHead';
+import TableRow       from '@mui/material/TableRow';
+import Paper          from '@mui/material/Paper';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -31,30 +31,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-
 export const MainTable = () => {
     const dispatch = useDispatch()
     
-    const status = useSelector((state) => state.store.status)
     const points = useSelector(selectAllPoints);
+    const mounted = useRef(false);
 
     useEffect(() => {
-        if (status === 'idle') dispatch(getPoints())
-    }, [status, dispatch]);
-
-    let content;
-    if (status === "succeeded") {
-        content = points.map((row) => (
-            <StyledTableRow key={row.x}>
-                <StyledTableCell component="th" scope="row">
-                    {row.x}
-                </StyledTableCell>
-                <StyledTableCell align="right">{row.y}</StyledTableCell>
-                <StyledTableCell align="right">{row.r}</StyledTableCell>
-                <StyledTableCell align="right">{row.hit}</StyledTableCell>
-            </StyledTableRow>
-        ));
-    }
+        if (!mounted.current) {
+            mounted.current = true;
+            dispatch(getPoints())
+        }   
+    }, [dispatch]);
 
     return (
         <section>
@@ -69,7 +57,16 @@ export const MainTable = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {content}
+                        {points.map((row) => (
+                            <StyledTableRow key={row.x}>
+                                <StyledTableCell component="th" scope="row">
+                                    {row.x}
+                                </StyledTableCell>
+                                <StyledTableCell align="right">{row.y}</StyledTableCell>
+                                <StyledTableCell align="right">{row.r}</StyledTableCell>
+                                <StyledTableCell align="right">{row.hit}</StyledTableCell>
+                            </StyledTableRow>
+                        ))}
                 </TableBody>
             </Table>
         </TableContainer>
