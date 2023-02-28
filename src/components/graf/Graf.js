@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectAllPoints } from "../../api/apiSlice";
 import './Graf.css'
 import graf from "../../assets/pic.svg";
@@ -51,8 +51,9 @@ function removeDots(ctx) {
 }
 
 export const Graf = () => {
-    const svgDataURI = `data:image/svg+xml;base64,${btoa(graf)}`;
     const canvasRef = useRef(null);
+    const dispatch = useDispatch();
+    //useEffect(() => { dispatch(selectAllPoints()); }, [dispatch]);
     const points = useSelector(selectAllPoints);
 
     useEffect(() => {
@@ -71,7 +72,7 @@ export const Graf = () => {
            // });
         //};
 
-    },[]);
+    }, [dispatch, points]);
 
     const handleClick = (e) => {
         var x = e.clientX, y = e.clientY; 

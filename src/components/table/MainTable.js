@@ -1,6 +1,6 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectAllPoints } from "../../api/apiSlice";
+import React, {useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectAllPoints, getPoints } from "../../api/apiSlice";
 
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -33,7 +33,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export const MainTable = () => {
+    const dispatch = useDispatch()
+    
+    const status = useSelector((state) => state.store.status)
     const points = useSelector(selectAllPoints);
+
+    useEffect(() => {
+        if (status === 'idle') dispatch(getPoints())
+    }, [status, dispatch]);
+
+    let content;
+    if (status === "succeeded") {
+        content = points.map((row) => (
+            <StyledTableRow key={row.x}>
+                <StyledTableCell component="th" scope="row">
+                    {row.x}
+                </StyledTableCell>
+                <StyledTableCell align="right">{row.y}</StyledTableCell>
+                <StyledTableCell align="right">{row.r}</StyledTableCell>
+                <StyledTableCell align="right">{row.hit}</StyledTableCell>
+            </StyledTableRow>
+        ));
+    }
 
     return (
         <section>
@@ -48,16 +69,7 @@ export const MainTable = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {points.map((row) => (
-                        <StyledTableRow key={row.x}>
-                            <StyledTableCell component="th" scope="row">
-                                {row.x}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">{row.y}</StyledTableCell>
-                            <StyledTableCell align="right">{row.r}</StyledTableCell>
-                            <StyledTableCell align="right">{row.hit}</StyledTableCell>
-                        </StyledTableRow>
-                    ))}
+                    {content}
                 </TableBody>
             </Table>
         </TableContainer>

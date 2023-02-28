@@ -1,18 +1,23 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const baseURL = axios.create({
-    baseURL: "http://localhost:8080/web-lab4-back/api/points"
-});
+const baseURL = axios.create({ baseURL: "http://localhost:8080/api" });
+const pointAdapter = createEntityAdapter();
 
+/*
+const initialState = pointAdapter.getInitialState({
+    status: 'idle',
+    r: 1,
+});
+*/
 const initialState = {
     points: [
-        { x: 1, y: 0, r: 1, hit: "Hit"},
-        { x: 0, y: 0, r: 1, hit: "Hit" },
-        { x: 1, y: 0, r: 1, hit: "Hit" },
-        { x: 0, y: 0, r: 1, hit: "Hit" },
-        { x: 1, y: 0, r: 1, hit: "Hit" },
-        { x: 0, y: 0, r: 1, hit: "Hit" }
+        { x: 1.0, y: 0.0, r: 1, hit: "Hit"},
+        //{ x: 0, y: 0, r: 1, hit: "Hit" },
+        //{ x: 1, y: 0, r: 1, hit: "Hit" },
+        //{ x: 0, y: 0, r: 1, hit: "Hit" },
+        //{ x: 1, y: 0, r: 1, hit: "Hit" },
+        //{ x: 0, y: 0, r: 1, hit: "Hit" }
     ],
     status: "idle",
     r: 1
@@ -44,28 +49,20 @@ const apiSlice = createSlice({
     name: "store",
     initialState,
     reducers: {
-        pointsAdded(state, action) {
-            state.points = state.points.concat(action.payload);
-        },
-        pointAdded(state, action) {
-            state.points.push(action.payload);
-        },
-        pointsDelete(state, action) {
-            state.points = [];
-        },
-        changeR(state, action) {
-            state.r = action.payload;
-        }
+        changeR(state, action) { state.r = action.payload; }
     },
     extraReducers(builder) {
         builder
             .addCase(postPoint.fulfilled, (state, action) => {
                 state.status = "succeeded";
+                //pointAdapter.addOne(action.payload);
                 state.points.push(action.payload);
             })
             .addCase(getPoints.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.points = state.points.concat(action.payload);
+                //pointAdapter.addMany(action.payload)
+                console.log(action.payload[0]);
+                state.points = state.points.concat(action.payload[0]);
             })
             .addCase(deletePoints.fulfilled, (state, action) => {
                 state.status = "succeeded";
@@ -74,7 +71,7 @@ const apiSlice = createSlice({
     }
 });
 
-export const { pointAdded, changeR, pointsAdded } = apiSlice.actions;
+export const { changeR } = apiSlice.actions;
 
 export const selectAllPoints = (state) => state.store.points;
 export const selectPointsByR = (state) => {
