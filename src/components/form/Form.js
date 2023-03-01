@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { changeR } from "../../api/apiSlice";
+import { selectR, changeR, postPoint, deletePoints } from "../../api/apiSlice";
 
 import InputLabel  from "@mui/material/InputLabel";
 import MenuItem    from "@mui/material/MenuItem";
@@ -14,15 +14,33 @@ import FormControl from "@mui/material/FormControl";
 export const Form = () => {
     const [x, setX] = useState("");
     const [y, setY] = useState("");
-    const [r, setR] = useState("");
+    const r = useSelector(selectR);
+    //const [r, setR] = useState("");
 
     const dispatch = useDispatch();
 
+    const canSend = [x, y, r].every(Boolean) && y >= -5 && y <= 5 && r > 0
+
     const handleChangeX = (event) => setX(event.target.value);
     const handleChangeY = (event) => setY(event.target.value);
-    const handleChangeR = (event) => {
-        setR(event.target.value);
-        dispatch(changeR(event.target.value));
+    const handleChangeR = (event) => dispatch(changeR(event.target.value));
+
+    const handleSubmit = async () => {
+        if (canSend) {
+            try {
+                await dispatch(postPoint({x: x, y: y, r: r})).unwrap();
+            } catch (err) {
+                console.error('Failed to save the point: ', err)
+            } 
+        }
+    };
+    const handleReset = async () => { 
+        try {
+            await dispatch(deletePoints()).unwrap();
+            setX(""); setY("");
+        } catch (err) {
+            console.error('Failed to delete points: ', err)
+        }
     };
 
     return (
@@ -91,8 +109,8 @@ export const Form = () => {
                     variant="contained"
                     aria-label="outlined primary button group"
                 >
-                    <Button>Submit</Button>
-                    <Button>Reset</Button>
+                    <Button onClick={handleSubmit}>Submit</Button>
+                    <Button onClick={handleReset}>Reset</Button>
                 </ButtonGroup>
             </form>
             <br />

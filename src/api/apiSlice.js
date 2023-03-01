@@ -2,18 +2,9 @@ import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/too
 import axios from "axios";
 
 const baseURL = axios.create({ baseURL: "http://localhost:8080/api" });
-const pointAdapter = createEntityAdapter();
 
-/*
-const initialState = pointAdapter.getInitialState({
-    status: 'idle',
-    r: 1,
-});
-*/
 const initialState = {
-    points: [
-        { x: 1.0, y: 1.0, r: 1, hit: "Hit"},
-    ],
+    points: [],
     r: 1
 };
 
@@ -44,7 +35,7 @@ const apiSlice = createSlice({
                 state.points.push(action.payload);
             })
             .addCase(getPoints.fulfilled, (state, action) => {
-                state.points = state.points.concat(action.payload[0]);
+                state.points = state.points.concat(action.payload);
             })
             .addCase(deletePoints.fulfilled, (state, action) => {
                 state.points = [];
