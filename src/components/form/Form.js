@@ -37,7 +37,7 @@ export const Form = () => {
     const handleReset = async () => { 
         try {
             await dispatch(deletePoints()).unwrap();
-            setX(""); setY("");
+            setX(""); setY(""); dispatch(changeR(1));
         } catch (err) {
             console.error('Failed to delete points: ', err)
         }
@@ -73,7 +73,7 @@ export const Form = () => {
                 <FormControl fullWidth>
                     <TextField
                         id="outlined-basic"
-                        label="Y"
+                        label="Y (-5...5)"
                         variant="outlined"
                         defaultValue="0"
                         value={y}

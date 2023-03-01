@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const baseURL = axios.create({ baseURL: "http://localhost:8080/api" });
@@ -46,10 +46,20 @@ const apiSlice = createSlice({
 export const { changeR } = apiSlice.actions;
 
 export const selectAllPoints = (state) => state.store.points;
-export const selectPointsByR = (state) => {
-    const points = state.store.points.slice();
-    points.filter((point) => point.r === state.store.r);
+export const selectPointsByR = (state) => state.store.points.slice().filter((p) => p.r === state.store.r)
+
+/*
+{
+    let points = [];
+    state.store.points.slice().forEach(point => {
+        if (point.r === state.store.r) points.push(point);
+    });;
+    //points.filter((point) => {
+    //    return point.r === state.store.r
+    //});
+    return points;
 };
+*/
 export const selectR = (state) => state.store.r;
 
 export default apiSlice.reducer;

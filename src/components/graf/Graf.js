@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux";
-import { selectAllPoints } from "../../api/apiSlice";
+import { selectAllPoints, postPoint, selectPointsByR, selectR } from "../../api/apiSlice";
 import './Graf.css'
 import graf from "../../assets/pic.svg";
 import { css } from '@emotion/react';
@@ -24,9 +24,6 @@ function resizeCtxCanvas(ctx) {
 }
 
 function redrawDots(ctx, points) {
-    //r = Number(getById('r').val());
-
-
     points.forEach((point) => {
         const { x: x0, y: y0 } = inverseTransformCoords(Number(point.x), Number(point.y), ctx.canvas.width / 2, Number(point.r));
         drawDot(ctx, x0, y0, point.hit === "Hit");
@@ -54,7 +51,10 @@ export const Graf = () => {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
     //useEffect(() => { dispatch(selectAllPoints()); }, [dispatch]);
-    const points = useSelector(selectAllPoints);
+    //const points = useSelector(selectAllPoints);
+    const points = useSelector(selectPointsByR);
+    const r = useSelector(selectR);
+    //console.log(points)
 
     useEffect(() => {
         const ctx = canvasRef.current.getContext('2d');
@@ -74,9 +74,18 @@ export const Graf = () => {
 
     }, [dispatch, points]);
 
-    const handleClick = (e) => { 
-        const { x: x, y: y } = transformCoords(e.nativeEvent.offsetX, e.nativeEvent.offsetY, canvasRef.current.getContext('2d').canvas.width / 2 ,1);
-        console.log("x: " + x + " y: " + y);
+    const handleClick = async (e) => {
+        if (r > 0) {
+            const { x: x, y: y } = transformCoords(e.nativeEvent.offsetX, e.nativeEvent.offsetY, canvasRef.current.getContext('2d').canvas.width / 2, r);
+            try {
+                await dispatch(postPoint({x:x, y:y, r:r})).unwrap();
+            } catch (err) {
+                console.err("Failed to send point: ", err);
+            }
+
+        } 
+        
+        //console.log("x: " + x + " y: " + y);
     }
 
     return (
