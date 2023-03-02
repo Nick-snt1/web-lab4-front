@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { selectR, changeR, postPoint, deletePoints } from "../../api/apiSlice";
+import { selectR, changeR, postPoint, deletePoints } from "../../../api/apiSlice";
 
 import InputLabel  from "@mui/material/InputLabel";
 import MenuItem    from "@mui/material/MenuItem";

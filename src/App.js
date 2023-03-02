@@ -1,21 +1,26 @@
-import './App.css';
-import { Navbar } from './components/navbar/Navbar';
-import { Form } from './components/form/Form';
-import { MainTable } from './components/table/MainTable';
-import { Graf } from './components/graf/Graf'
+import React from "react";
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
+import { MainPage } from './components/main/MainPage';
+import { SignInPage } from './components/auth/SignInPage'
+import { RegisterPage } from './components/auth/RegisterPage'
+import './App.css';
+
+
+
+//<MainContainer/>
 function App() {
-  return (
-    <div className="App">
-        <Navbar/>
-        <br/>
-        <Graf />
-        <Form/>
-        <MainTable/>
-        <header className="App-header">
-        </header>
-    </div>
-  );
+
+    return (
+        <BrowserRouter>
+            <div className="App">
+                <Routes>
+                    <Route path='/' element={<MainPage />}/>
+                    <Route path='/reg'  element={<RegisterPage />}/>
+                </Routes>
+            </div>
+        </BrowserRouter>
+    );
 }
 
 export default App;

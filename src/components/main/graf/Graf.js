@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux";
-import { selectAllPoints, postPoint, selectPointsByR, selectR } from "../../api/apiSlice";
+import { selectAllPoints, postPoint, selectPointsByR, selectR } from "../../../api/apiSlice";
 import './Graf.css'
-import graf from "../../assets/pic.svg";
+import graf from "./pic.svg";
 import { css } from '@emotion/react';
 
 function transformCoords(x, y, half_canvas_size, r) {
@@ -47,7 +47,7 @@ function removeDots(ctx) {
     ctx.restore();
 }
 
-export const Graf = () => {
+export const Graf = (props) => {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
     //useEffect(() => { dispatch(selectAllPoints()); }, [dispatch]);
@@ -75,12 +75,13 @@ export const Graf = () => {
     }, [dispatch, points]);
 
     const handleClick = async (e) => {
+        console.log();
         if (r > 0) {
             const { x: x, y: y } = transformCoords(e.nativeEvent.offsetX, e.nativeEvent.offsetY, canvasRef.current.getContext('2d').canvas.width / 2, r);
             try {
                 await dispatch(postPoint({x:x, y:y, r:r})).unwrap();
             } catch (err) {
-                console.err("Failed to send point: ", err);
+                console.error('Failed to add point: ', err)
             }
 
         } 

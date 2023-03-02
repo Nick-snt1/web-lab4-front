@@ -1,6 +1,6 @@
 import React, {useEffect, useRef }    from "react";
 import { useSelector, useDispatch }   from "react-redux";
-import { selectAllPoints, getPoints } from "../../api/apiSlice";
+import { selectAllPoints, getPoints } from "../../../api/apiSlice";
 
 import { styled }     from '@mui/material/styles';
 import Table          from '@mui/material/Table';
@@ -40,7 +40,7 @@ export const MainTable = () => {
     useEffect(() => {
         if (!mounted.current) {
             mounted.current = true;
-            dispatch(getPoints())
+            dispatch(getPoints());
         }   
     }, [dispatch]);
 
