@@ -59,19 +59,6 @@ export const { changeR, clearStore } = apiSlice.actions;
 
 export const selectAllPoints = (state) => state.store.points;
 export const selectPointsByR = (state) => state.store.points.slice().filter((p) => p.r === state.store.r)
-
-/*
-{
-    let points = [];
-    state.store.points.slice().forEach(point => {
-        if (point.r === state.store.r) points.push(point);
-    });;
-    //points.filter((point) => {
-    //    return point.r === state.store.r
-    //});
-    return points;
-};
-*/
-export const selectR = (state) => state.store.r;
+export const selectR =         (state) => state.store.r;
 
 export default apiSlice.reducer;

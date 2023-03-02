@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useDispatch } from "react-redux";
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import { Button, Snackbar } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
@@ -10,9 +10,14 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import MuiAlert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { authenticate } from "../../api/authSlice";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function Copyright(props) {
     return (
@@ -30,6 +35,11 @@ function Copyright(props) {
 const theme = createTheme();
 
 export const SignIn = () => {
+    //const [error, setError] = React.useState(false);
+
+    const [open, setOpen] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState("");
+
     const dispatch = useDispatch();
     
     const handleSubmit = async (event) => {
@@ -38,9 +48,19 @@ export const SignIn = () => {
         try {
             await dispatch(authenticate({ name: data.get('email'), password: data.get('password') })).unwrap();
         } catch (err) {
-            console.error('Not valid username or password: ', err)
+            if (err.code && err.code === 'ERR_BAD_REQUEST') {
+                setErrorMsg('Not valid username or password');
+            } else {
+                setErrorMsg('ServerError: unknown error');
+            }
+            setOpen(true);
         }
     };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setOpen(false);
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -60,7 +80,7 @@ export const SignIn = () => {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} validate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required
@@ -79,7 +99,7 @@ export const SignIn = () => {
                             label="Password"
                             type="password"
                             id="password"
-                            autoComplete="current-password"
+                            autoComplete="current-password"            
                         />
                         <Button
                             type="submit"
@@ -99,6 +119,13 @@ export const SignIn = () => {
                     </Box>
                 </Box>
                 <Copyright sx={{ mt: 8, mb: 4 }} />
+
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                    <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                        {errorMsg}
+                    </Alert>
+                </Snackbar>
+
             </Container>
         </ThemeProvider>
     );

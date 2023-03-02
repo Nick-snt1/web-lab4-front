@@ -1,9 +1,14 @@
 import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux";
-import { selectAllPoints, postPoint, selectPointsByR, selectR } from "../../../api/apiSlice";
+import { postPoint, selectPointsByR, selectR } from "../../../api/apiSlice";
+import { Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import './Graf.css'
 import graf from "./pic.svg";
-import { css } from '@emotion/react';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function transformCoords(x, y, half_canvas_size, r) {
     var new_x = ((x - half_canvas_size) * ((r + (r * 0.705)) / half_canvas_size)).toFixed(5);
@@ -38,23 +43,21 @@ function drawDot(ctx, x, y, isHit) {
     ctx.fill(circle);
 }
 
-function removeDots(ctx) {
-    ctx.save();
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    ctx.restore();
-}
-
-export const Graf = (props) => {
+export const Graf = () => {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
-    //useEffect(() => { dispatch(selectAllPoints()); }, [dispatch]);
-    //const points = useSelector(selectAllPoints);
     const points = useSelector(selectPointsByR);
     const r = useSelector(selectR);
-    //console.log(points)
+
+    const [open, setOpen] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState("");
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setOpen(false);
+    }
+
 
     useEffect(() => {
         const ctx = canvasRef.current.getContext('2d');
@@ -66,12 +69,6 @@ export const Graf = (props) => {
             redrawDots(ctx, points);
         });
 
-        //return () => {
-         //   window.removeEventListener('resize', () => {
-           //     console.log('resized');
-           // });
-        //};
-
     }, [dispatch, points]);
 
     const handleClick = async (e) => {
@@ -81,12 +78,11 @@ export const Graf = (props) => {
             try {
                 await dispatch(postPoint({x:x, y:y, r:r})).unwrap();
             } catch (err) {
-                console.error('Failed to add point: ', err)
+                setErrorMsg('Failed to save the point');
+                setOpen(true);
             }
 
         } 
-        
-        //console.log("x: " + x + " y: " + y);
     }
 
     return (
@@ -99,6 +95,11 @@ export const Graf = (props) => {
             </object>
             
         </div>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    {errorMsg}
+                </Alert>
+            </Snackbar>
         </section>
     );
 }

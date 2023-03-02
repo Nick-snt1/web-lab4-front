@@ -2,13 +2,9 @@ import React from "react";
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
 import { MainPage } from './components/main/MainPage';
-import { SignInPage } from './components/auth/SignInPage'
 import { RegisterPage } from './components/auth/RegisterPage'
 import './App.css';
 
-
-
-//<MainContainer/>
 function App() {
 
     return (
