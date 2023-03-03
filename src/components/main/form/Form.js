@@ -7,33 +7,22 @@ import InputLabel  from "@mui/material/InputLabel";
 import MenuItem    from "@mui/material/MenuItem";
 import Select      from "@mui/material/Select";
 import TextField   from "@mui/material/TextField";
-import { Button, Snackbar } from '@mui/material';
+import { Button }  from '@mui/material';
 import ButtonGroup from "@mui/material/ButtonGroup";
 import FormControl from "@mui/material/FormControl";
-import MuiAlert    from '@mui/material/Alert';
-
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 
 export const Form = () => {
     const [x, setX] = useState("");
     const [y, setY] = useState("");
 
-    const [errorX, setErrorX] = useState(false);
-    const [errorY, setErrorY] = useState(false);
+    const [errorX,     setErrorX]     = useState(false);
+    const [errorY,     setErrorY]     = useState(false);
     const [isDisabled, setIsDisabled] = useState(true);
 
     const r = useSelector(selectR);
 
-    const [open, setOpen] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
-
     const dispatch = useDispatch();
-
-    //const canSend = [x, y, r].every(Boolean) && y >= -5 && y <= 5 && r > 0
 
     const handleChangeX = (event) => {
         setErrorX(event.target.value === null || event.target.value === "");
@@ -50,14 +39,11 @@ export const Form = () => {
     const handleChangeR = (event) => dispatch(changeR(event.target.value));
 
     const handleSubmit = async () => {
-        //if (canSend) {
-            try {
-                await dispatch(postPoint({x: x, y: y, r: r})).unwrap();
-            } catch (err) {
-                setErrorMsg('Failed to save the point');
-                setOpen(true);
-            } 
-      //  }
+        try {
+            await dispatch(postPoint({x: x, y: y, r: r})).unwrap();
+        } catch (err) {
+            console.error('Failed to save the point', err);
+        } 
     };
     const handleReset = async () => { 
         try {
@@ -65,15 +51,11 @@ export const Form = () => {
             setX(""); setY(""); dispatch(changeR(1));
             setErrorX(false); setErrorY(false);
         } catch (err) {
-            setErrorMsg('Failed to delete points');
-            setOpen(true);
+            console.error('Failed to delete points', err);
         }
     };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        setOpen(false);
-    }
+
     return (
         <section>
             <form>
@@ -109,7 +91,6 @@ export const Form = () => {
                         id="outlined-basic"
                         label="Y"
                         variant="outlined"
-                        defaultValue="1"
                         value={y}
                         error={errorY}
                         helperText={errorY ? "Y must be a number between 5 and -5" : ""}
@@ -146,11 +127,6 @@ export const Form = () => {
                 </ButtonGroup>
             </form>
             <br />
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                    {errorMsg}
-                </Alert>
-            </Snackbar>
         </section>
     );
 };

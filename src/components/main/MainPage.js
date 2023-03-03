@@ -1,27 +1,26 @@
-import { useSelector, useDispatch } from "react-redux";
-import { selectIsLogged, changeIsLogged } from "../../api/authSlice";
+import { useSelector } from "react-redux";
 
 import { Navbar }    from "../navbar/Navbar"
 import { Form }      from "./form/Form"
 import { MainTable } from "./table/MainTable"
 import { Graf }      from "./graf/Graf"
-import { SignIn }    from "../auth/SignIn";
 
+import { AppSnackbar } from '../snackbar/AppSnackbar';
+import { selectErrorMsg, selectIsError } from "../../api/apiSlice";
 
 
 export const MainPage = () => {
-    const dispatch  = useDispatch();
-    dispatch(changeIsLogged(localStorage.getItem("WebLab4_Jwt") != null));
-    const isLogged = useSelector(selectIsLogged);
-
-    const logInOrMain = () => {
-        return isLogged ? (<div><br/><Graf/><Form/><MainTable/></div>) : (<div><SignIn /></div>)
-    }
+    const open     = useSelector(selectIsError);
+    const errorMsg = useSelector(selectErrorMsg);
 
     return (
         <div>
-            <Navbar isLoggedIn={isLogged}/>
-            {logInOrMain()}
+            <Navbar isLoggedIn={true}/>
+            <br />
+            <Graf />
+            <Form />
+            <MainTable />
+            <AppSnackbar open={open} errorMsg={errorMsg} />
         </div>
     );
 }

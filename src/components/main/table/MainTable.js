@@ -1,7 +1,6 @@
 import React, {useEffect, useRef }    from "react";
 import { useSelector, useDispatch }   from "react-redux";
 import { selectAllPoints, getPoints } from "../../../api/apiSlice";
-import {Snackbar } from '@mui/material';
 import { styled }     from '@mui/material/styles';
 import Table          from '@mui/material/Table';
 import TableBody      from '@mui/material/TableBody';
@@ -10,11 +9,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead      from '@mui/material/TableHead';
 import TableRow       from '@mui/material/TableRow';
 import Paper          from '@mui/material/Paper';
-import MuiAlert from '@mui/material/Alert';
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -39,10 +33,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export const MainTable = () => {
     const dispatch = useDispatch()
     
-    const points = useSelector(selectAllPoints);
+    const points  = useSelector(selectAllPoints);
     const mounted = useRef(false);
-    const [open, setOpen] = React.useState(false);
-    const [errorMsg, setErrorMsg] = React.useState("");
 
     useEffect(() => {
         if (!mounted.current) {
@@ -50,11 +42,6 @@ export const MainTable = () => {
             dispatch(getPoints());
         }   
     }, [dispatch]);
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        setOpen(false);
-    }
 
     return (
         <section>
@@ -70,7 +57,7 @@ export const MainTable = () => {
                 </TableHead>
                 <TableBody>
                         {points.map((row) => (
-                            <StyledTableRow key={row.x}>
+                            <StyledTableRow key={row.id}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.x}
                                 </StyledTableCell>
@@ -82,11 +69,6 @@ export const MainTable = () => {
                 </TableBody>
             </Table>
         </TableContainer>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                    {errorMsg}
-                </Alert>
-            </Snackbar>
         </section>
     );
 }

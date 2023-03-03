@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# web-lab4-front
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Page 1](https://user-images.githubusercontent.com/66903296/222086325-ac028115-f8f3-4513-8c08-9b421ca5d74a.svg)
 
-## Available Scripts
 
-In the project directory, you can run:
+**Переписать приложение из [предыдущей лабораторной работы](https://github.com/Nick-snt1/web-lab3) с использованием следующих технологий:**
 
-### `npm start`
+- Уровень back-end должен быть основан на Spring.
+- Уровень front-end должен быть построен на React + Redux (необходимо использовать ES6 и JSX) с использованием набора компонентов Belle
+- Взаимодействие между уровнями back-end и front-end должно быть организовано посредством REST API.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Приложение по-прежнему должно включать в себя 2 страницы - стартовую и основную страницу приложения. Обе страницы приложения должны быть адаптированы для отображения в 3 режимах:**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- "Десктопный" - для устройств, ширина экрана которых равна или превышает 1232 пикселей.
+- "Планшетный" - для устройств, ширина экрана которых равна или превышает 877, но меньше 1232 пикселей.
+- "Мобильный"- для устройств, ширина экрана которых меньше 877 пикселей.
 
-### `npm test`
+**Стартовая страница должна содержать следующие элементы:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- "Шапку", содержащую ФИО студента, номер группы и номер варианта.
+- Форму для ввода логина и пароля. Информация о зарегистрированных в системе пользователях должна храниться в отдельной таблице БД (пароль должен храниться в виде хэш-суммы). Доступ неавторизованных пользователей к основной странице приложения должен быть запрещён.
 
-### `npm run build`
+**Основная страница приложения должна содержать следующие элементы:**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Набор полей ввода для задания координат точки и радиуса области в соответствии с вариантом задания: Radio {'-3','-2','-1','0','1','2','3','4','5'} для координаты по оси X, TextInput (-5 ... 5) для координаты по оси Y, и Radio {'-3','-2','-1','0','1','2','3','4','5'} для задания радиуса области. Если поле ввода допускает ввод заведомо некорректных данных (таких, например, как буквы в координатах точки или отрицательный радиус), то приложение должно осуществлять их валидацию.
+- Динамически обновляемую картинку, изображающую область на координатной плоскости в соответствии с номером варианта и точки, координаты которых были заданы пользователем. Клик по картинке должен инициировать сценарий, осуществляющий определение координат новой точки и отправку их на сервер для проверки её попадания в область. Цвет точек должен зависить от факта попадания / непопадания в область. Смена радиуса также должна инициировать перерисовку картинки.
+- Таблицу со списком результатов предыдущих проверок.
+- Ссылку, по которой аутентифицированный пользователь может закрыть свою сессию и вернуться на стартовую страницу приложения.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Дополнительные требования к приложению:**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Все результаты проверки должны сохраняться в базе данных под управлением СУБД PostgreSQL.
+- Для доступа к БД необходимо использовать Spring Data.

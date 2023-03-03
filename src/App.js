@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
-import { MainPage } from './components/main/MainPage';
+import { MainOrAuth } from "./components/MainOrAuth";
 import { RegisterPage } from './components/auth/RegisterPage'
 import './App.css';
 
@@ -11,7 +11,7 @@ function App() {
         <BrowserRouter>
             <div className="App">
                 <Routes>
-                    <Route path='/' element={<MainPage />}/>
+                    <Route path='/' element={<MainOrAuth />}/>
                     <Route path='/reg'  element={<RegisterPage />}/>
                 </Routes>
             </div>

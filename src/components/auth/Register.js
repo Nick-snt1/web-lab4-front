@@ -1,26 +1,21 @@
 import * as React from 'react';
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-
-import Avatar from '@mui/material/Avatar';
-import { Button, Snackbar } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import MuiAlert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { 
+    Button,    
+    CssBaseline, 
+    Avatar,
+    TextField, 
+    Link,       
+    Grid, 
+    Box,       
+    Typography, 
+    Container,
+} from '@mui/material';
 import { register } from "../../api/authSlice";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function Copyright(props) {
     return (
@@ -38,23 +33,22 @@ function Copyright(props) {
 const theme = createTheme();
 
 export const SignUp = () => {
-    const [errorName, setErrorName]         = React.useState(false);
+    const [errorName,     setErrorName]     = React.useState(false);
     const [errorPassword, setErrorPassword] = React.useState(false);
-    const [isDisabled, setIsDisabled]       = React.useState(false);
-
-    const [open, setOpen]                   = React.useState(false);
-    const [errorMsg, setErrorMsg]           = React.useState("");
+    const [isDisabled,    setIsDisabled]    = React.useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleUsername = (e) => { 
-        setErrorName(e.target.value.length < 3 || e.target.value.length > 30);
-        setIsDisabled((e.target.value.length < 3 || e.target.value.length > 30) || errorPassword);
+        const isValid = e.target.value.length < 3 || e.target.value.length > 30;
+        setErrorName(isValid);
+        setIsDisabled(isValid || errorPassword);
     }
     const handlePassword = (e) => { 
-        setErrorPassword(e.target.value.length < 6);
-        setIsDisabled(errorName || e.target.value.length < 6);
+        const isValid = e.target.value.length < 6;
+        setErrorPassword(isValid);
+        setIsDisabled(errorName || isValid);
     }
 
     const handleSubmit = async (event) => {
@@ -63,22 +57,8 @@ export const SignUp = () => {
         try {
             await dispatch(register({ name: data.get('email'), password: data.get('password') })).unwrap();
             navigate("/");
-        } catch (err) {
-            if (err.code && err.code === 'ERR_BAD_REQUEST') {
-                setErrorMsg('Username ' + data.get('email')+ ' has already taken');
-            } else if (err.code) {
-                setErrorMsg("Not valid username or password");
-            } else {
-                setErrorMsg('ServerError: unknown error');
-            }
-            setOpen(true);
-        }
+        } catch (err) { console.error("Failed to register: ", err); }
     };
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        setOpen(false);
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -147,13 +127,6 @@ export const SignUp = () => {
                     </Box>
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
-
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal:'center' }}>
-                    <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                        {errorMsg}
-                    </Alert>
-                </Snackbar>
-
             </Container>
         </ThemeProvider>
     );

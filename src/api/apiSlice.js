@@ -16,7 +16,9 @@ baseURL.interceptors.request.use(
 
 const initialState = {
     points: [],
-    r: 1
+    r: 1,
+    isError: false,
+    errorMsg: ""
 };
 
 export const postPoint = createAsyncThunk("store/postPoint", async (point) => {
@@ -38,27 +40,45 @@ const apiSlice = createSlice({
     name: "store",
     initialState,
     reducers: {
-        changeR(state, action) { state.r = action.payload; },
-        clearStore(state, action) { state.points = []; state.r = 1; }
+        changeR   (state, action) { state.r = action.payload; },
+        clearStore(state)         { state.points = []; state.r = 1;  },
+        setErrorApi(state, action)   { state.isError = action.payload.isError; state.errorMsg = action.payload.errorMsg;  },
     },
     extraReducers(builder) {
         builder
             .addCase(postPoint.fulfilled, (state, action) => {
                 state.points.push(action.payload);
             })
+            .addCase(postPoint.rejected, (state, action) => {
+                console.log(action.payload);
+                state.isError = true;
+                state.errorMsg = "Failed to save the point";
+            })
             .addCase(getPoints.fulfilled, (state, action) => {
                 state.points = state.points.concat(action.payload);
             })
-            .addCase(deletePoints.fulfilled, (state, action) => {
+            .addCase(getPoints.rejected, (state, action) => {
+                console.log(action.payload);
+                state.isError = true;
+                state.errorMsg = "Failed to get the points";
+            })
+            .addCase(deletePoints.fulfilled, (state) => {
                 state.points = [];
+            })
+            .addCase(deletePoints.rejected, (state, action) => {
+                console.log(action.payload);
+                state.isError = true;
+                state.errorMsg = "Failed to delete the points";
             });
     }
 });
 
-export const { changeR, clearStore } = apiSlice.actions;
+export const { changeR, clearStore, setErrorApi } = apiSlice.actions;
 
 export const selectAllPoints = (state) => state.store.points;
 export const selectPointsByR = (state) => state.store.points.slice().filter((p) => p.r === state.store.r)
 export const selectR =         (state) => state.store.r;
+export const selectIsError =   (state) => state.store.isError;
+export const selectErrorMsg =  (state) => state.store.errorMsg;
 
 export default apiSlice.reducer;
