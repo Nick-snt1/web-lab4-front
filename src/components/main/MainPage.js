@@ -7,6 +7,7 @@ import { Graf }      from "./graf/Graf"
 
 import { AppSnackbar } from '../snackbar/AppSnackbar';
 import { selectErrorMsg, selectIsError } from "../../api/apiSlice";
+import "./MainPage.css";
 
 
 export const MainPage = () => {
@@ -14,12 +15,12 @@ export const MainPage = () => {
     const errorMsg = useSelector(selectErrorMsg);
 
     return (
-        <div>
+        <div className="mainPage">
             <Navbar isLoggedIn={true}/>
-            <br />
-            <Graf />
-            <Form />
-            <MainTable />
+            <div className="inLine">
+                <div className="graf-cont"><Graf /></div> <div className="form-cont"><Form /></div>
+            </div>
+            <MainTable/>
             <AppSnackbar open={open} errorMsg={errorMsg} />
         </div>
     );

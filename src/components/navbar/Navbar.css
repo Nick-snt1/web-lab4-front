@@ -4,12 +4,21 @@ nav {
     background: blueviolet; /*#764abc*/
 }
 
-
 nav section {
     width: 100%;
 }
+
 nav section h1 {
     display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+    nav section h1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 nav section h1,

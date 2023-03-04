@@ -10,6 +10,7 @@ import TextField   from "@mui/material/TextField";
 import { Button }  from '@mui/material';
 import ButtonGroup from "@mui/material/ButtonGroup";
 import FormControl from "@mui/material/FormControl";
+import "./Form.css"
 
 
 export const Form = () => {
@@ -57,9 +58,8 @@ export const Form = () => {
 
 
     return (
-        <section>
-            <form>
-                <br />
+        <section >
+            <form className="form">
                 <FormControl fullWidth>
                     <InputLabel id="x-label">X</InputLabel>
                     <Select
@@ -118,6 +118,7 @@ export const Form = () => {
                 </FormControl>
                 <br />
                 <br />
+              
                 <ButtonGroup
                     variant="contained"
                     aria-label="outlined primary button group"
@@ -125,8 +126,9 @@ export const Form = () => {
                     <Button onClick={handleSubmit} disabled={isDisabled}>Submit</Button>
                     <Button onClick={handleReset}>Reset</Button>
                 </ButtonGroup>
+            
             </form>
-            <br />
+            
         </section>
     );
 };

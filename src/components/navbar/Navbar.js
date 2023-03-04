@@ -22,7 +22,8 @@ export const Navbar = (props) => {
         <nav>
             <section>
                 <h1 id="navHeader">
-                    Vladimirov Nikita #512920
+                    <span>Vladimirov Nikita</span> 
+                    <span> #512920</span>
                 </h1>
                 <div className="navContent">
                     <div className="navLinks">

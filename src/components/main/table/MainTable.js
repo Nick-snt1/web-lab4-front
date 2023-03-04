@@ -22,7 +22,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: "#cb9ff4",
+        backgroundColor: "#cb9ff4",     
     },
     // hide last border
     '&:last-child td, &:last-child th': {
@@ -45,9 +45,9 @@ export const MainTable = () => {
 
     return (
         <section>
-        <TableContainer component={Paper}>
-            <Table aria-label="customized table">
-                <TableHead>
+        <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+            <Table stickyHeader aria-label="customized table" >
+                <TableHead >
                     <TableRow>
                         <StyledTableCell>X</StyledTableCell>
                         <StyledTableCell align="right">Y</StyledTableCell>
